@@ -3,237 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dominique Verna - E-Card</title>
-    <!-- Links to your manifest for the Home Screen app feel -->
+    <title>Dominique Verna - Digital E-Card</title>
+    
+    <!-- Web App Manifest -->
     <link rel="manifest" href="manifest.json">
+    
+    <!-- Theme color for browser address bar -->
+    <meta name="theme-color" content="#0d7a5d">
+    
+    <!-- iOS support for Add to Home Screen -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Dominique Verna">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Dominique V.">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Load QRCode.js for dynamic QR generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <!-- Configure custom colors in Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0d7a5d',
+                        primaryHover: '#0a614a',  
+                        cardBg: '#defcf4',
+                    }
+                }
+            }
+        }
+    </script>
     
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
         body {
-            background-color: #defcf4; /* Mint background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        /* 3D Flip Container */
-        .card-container {
-            background-color: transparent;
-            width: 100%;
-            max-width: 400px;
-            height: 600px;
-            perspective: 1000px; /* Gives the 3D effect */
-        }
-
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
-        }
-
-        /* Toggles the flip */
-        .is-flipped {
-            transform: rotateY(180deg);
-        }
-
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden; /* Safari */
-            backface-visibility: hidden;
-            background-color: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(13, 122, 93, 0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-        }
-
-        .card-back {
-            transform: rotateY(180deg);
-            justify-content: center;
-        }
-
-        .header {
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            color: #0d7a5d; /* Deep Teal */
-            font-size: 28px;
-            margin-bottom: 5px;
-        }
-
-        /* Visible email removed from here as requested! */
-
-        .btn-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            background-color: #0d7a5d;
-            color: #ffffff;
-            text-decoration: none;
-            padding: 15px 10px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            transition: opacity 0.2s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-        }
-
-        .btn-full {
-            grid-column: span 2;
-            background-color: #333333; /* Distinct color for saving contacts */
-        }
-
-        .action-row {
-            display: flex;
-            gap: 15px;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .action-row .btn {
-            flex: 1;
+            font-family: 'Inter', sans-serif;
             background-color: #defcf4;
-            color: #0d7a5d;
-            border: 2px solid #0d7a5d;
         }
 
-        .qr-image {
-            width: 200px;
-            height: 200px;
-            margin-bottom: 30px;
-            border: 10px solid #defcf4;
-            border-radius: 15px;
-        }
-
-        #copy-notification {
-            color: #0d7a5d;
-            font-weight: bold;
-            margin-top: 15px;
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
             opacity: 0;
-            transition: opacity 0.3s;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .flip-transition {
+            transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+
+        .qr-container img {
+            margin: 0 auto;
+            border-radius: 0.5rem;
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-8">
 
-    <div class="card-container">
-        <div class="card-inner" id="card">
+    <div class="bg-transparent w-full max-w-sm h-[650px] perspective-1000 fade-in-up">
+        
+        <div id="flip-card-inner" class="relative w-full h-full transform-style-3d flip-transition shadow-xl rounded-3xl">
             
-            <!-- FRONT OF CARD -->
-            <div class="card-front">
-                <div class="header">
-                    <h1>Dominique Verna</h1>
-                </div>
-
-                <div class="btn-grid">
-                    <a href="tel:5164242140" class="btn">📞 Call</a>
-                    <a href="sms:5164242140" class="btn">💬 Text</a>
-                    <a href="mailto:dom1109@aol.com" class="btn">✉️ Email</a>
-                    <a href="https://wa.me/15164242140" target="_blank" class="btn">📱 WhatsApp</a>
-                    
-                    <!-- Save to Contacts Button -->
-                    <button onclick="downloadVCard()" class="btn btn-full">📥 Save to Contacts</button>
-                </div>
-
-                <div class="action-row">
-                    <!-- Flip to back -->
-                    <button onclick="flipCard()" class="btn">🔄 QR Code</button>
-                    <!-- Share via copying link -->
-                    <button onclick="copyLink()" class="btn">🔗 Share</button>
-                </div>
+            <!-- ================= FRONT FACE ================= -->
+            <div class="absolute inset-0 w-full h-full backface-hidden bg-white rounded-3xl overflow-hidden flex flex-col">
                 
-                <p id="copy-notification">Link copied!</p>
+                <div class="bg-primary h-24 w-full shrink-0 relative"></div>
+
+                <div class="relative flex justify-center -mt-12 shrink-0">
+                    <div class="w-24 h-24 bg-white rounded-full p-1 shadow-md">
+                        <div class="w-full h-full bg-cardBg text-primary rounded-full flex items-center justify-center text-3xl font-bold border-2 border-primary">
+                            DV
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center px-6 pt-4 pb-2">
+                    <h1 class="text-2xl font-bold text-gray-800">Dominique Verna</h1>
+                    <p class="text-sm font-medium text-primary mt-1 mb-4">Digital Business Card</p>
+                    
+                    <div class="grid grid-cols-2 gap-3 mt-2">
+                        <a href="tel:5164242140" class="flex flex-col items-center justify-center p-3 bg-primary text-white rounded-xl hover:bg-primaryHover transition-all transform hover:scale-105 shadow-sm">
+                            <i class="fa-solid fa-phone text-xl mb-1"></i>
+                            <span class="text-xs font-semibold">Call</span>
+                        </a>
+
+                        <a href="sms:5164242140" class="flex flex-col items-center justify-center p-3 bg-primary text-white rounded-xl hover:bg-primaryHover transition-all transform hover:scale-105 shadow-sm">
+                            <i class="fa-solid fa-comment-sms text-xl mb-1"></i>
+                            <span class="text-xs font-semibold">Message</span>
+                        </a>
+
+                        <a href="mailto:dom1109@aol.com" class="flex flex-col items-center justify-center p-3 bg-primary text-white rounded-xl hover:bg-primaryHover transition-all transform hover:scale-105 shadow-sm">
+                            <i class="fa-solid fa-envelope text-xl mb-1"></i>
+                            <span class="text-xs font-semibold">Email</span>
+                        </a>
+
+                        <a href="https://wa.me/15164242140" target="_blank" class="flex flex-col items-center justify-center p-3 bg-primary text-white rounded-xl hover:bg-primaryHover transition-all transform hover:scale-105 shadow-sm">
+                            <i class="fa-brands fa-whatsapp text-xl mb-1"></i>
+                            <span class="text-xs font-semibold">WhatsApp</span>
+                        </a>
+                    </div>
+
+                    <div class="mt-4">
+                        <button onclick="downloadVCard()" class="w-full flex items-center justify-center gap-2 py-3 px-4 bg-gray-800 text-white font-bold text-sm rounded-xl hover:bg-gray-900 transition-all shadow-md transform hover:scale-[1.02]">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>Save to Contacts</span>
+                        </button>
+                    </div>
+
+                    <div class="flex gap-3 mt-4 border-t border-gray-100 pt-4">
+                        <button onclick="shareCard()" class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-cardBg text-primary font-semibold text-sm rounded-xl hover:bg-primary/20 transition-colors shadow-inner border border-primary/20">
+                            <i class="fa-solid fa-share-nodes"></i>
+                            <span id="share-text">Share</span>
+                        </button>
+
+                        <button onclick="flipCard()" class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-cardBg text-primary font-semibold text-sm rounded-xl hover:bg-primary/20 transition-colors shadow-inner border border-primary/20">
+                            <i class="fa-solid fa-qrcode"></i>
+                            <span>QR Code</span>
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <!-- BACK OF CARD -->
-            <div class="card-back">
-                <h2 style="color: #0d7a5d; margin-bottom: 20px;">Scan to Call</h2>
+            <!-- ================= BACK FACE ================= -->
+            <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-white rounded-3xl overflow-hidden flex flex-col justify-between">
                 
-                <!-- QR Code dynamically generated containing the phone number -->
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=tel:5164242140&color=0d7a5d&bgcolor=defcf4" alt="QR Code" class="qr-image">
-                
-                <!-- Flip to front -->
-                <button onclick="flipCard()" class="btn" style="width: 80%;">Back to Card</button>
+                <div class="bg-primary h-16 w-full flex items-center justify-center">
+                    <h2 class="text-white font-semibold tracking-wider uppercase text-sm">Scan to Connect</h2>
+                </div>
+
+                <div class="flex flex-col items-center justify-center flex-1 px-6">
+                    <p class="text-gray-800 font-bold text-lg mb-1">Dominique Verna</p>
+                    <p class="text-sm text-gray-500 mb-6 text-center">Open your camera and scan the code below to call me directly.</p>
+                    
+                    <div class="p-4 bg-cardBg rounded-2xl shadow-inner border border-primary/30 transform transition-transform hover:scale-105">
+                        <div id="qrcode" class="qr-container bg-white p-2 rounded-xl"></div>
+                    </div>
+
+                    <!-- Plain number shown under the QR so it's never misread -->
+                    <p class="mt-4 text-lg font-bold tracking-wide text-primary">516-424-2140</p>
+                </div>
+
+                <div class="p-6">
+                    <button onclick="flipCard()" class="w-full flex items-center justify-center gap-2 py-3 px-4 bg-primary text-white font-semibold text-sm rounded-xl hover:bg-primaryHover transition-all shadow-md">
+                        <i class="fa-solid fa-arrow-rotate-left"></i>
+                        <span>Back to Card</span>
+                    </button>
+                </div>
             </div>
 
         </div>
     </div>
 
     <script>
-        // Flip animation trigger
-        function flipCard() {
-            const card = document.getElementById('card');
-            card.classList.toggle('is-flipped');
-        }
+        // The one and only phone number — no +1, no 0, no country code
+        const PHONE_NUMBER = '5164242140';
 
-        // Copy link to share
-        function copyLink() {
-            const currentUrl = window.location.href;
-            navigator.clipboard.writeText(currentUrl).then(() => {
-                const notice = document.getElementById('copy-notification');
-                notice.style.opacity = '1';
-                setTimeout(() => {
-                    notice.style.opacity = '0';
-                }, 2000);
+        window.addEventListener('DOMContentLoaded', function () {
+            new QRCode(document.getElementById('qrcode'), {
+                // Plain digits as TEXT — no "tel:" prefix, so the scanner
+                // app can't inject a 0 or 1. It just shows 5164242140.
+                text: PHONE_NUMBER,
+                width: 180,
+                height: 180,
+                colorDark: '#0d7a5d',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
             });
-        }
+        });
 
-        // Generate and download the vCard (.vcf)
-        // This is where the email is hidden but perfectly formatted for the phone!
         function downloadVCard() {
             const vcard = `BEGIN:VCARD
 VERSION:3.0
-N:Verna;Dominique;;;
 FN:Dominique Verna
-TEL;TYPE=CELL:516-424-2140
+N:Verna;Dominique;;;
+TEL;TYPE=CELL:${PHONE_NUMBER}
 EMAIL;TYPE=PREF,INTERNET:dom1109@aol.com
 END:VCARD`;
-
-            const blob = new Blob([vcard], { type: "text/vcard" });
+            
+            const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = 'Dominique_Verna.vcf';
-            
-            document.body.appendChild(a);
-            a.click();
-            
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'Dominique_Verna.vcf');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function flipCard() {
+            const cardInner = document.getElementById('flip-card-inner');
+            cardInner.classList.toggle('rotate-y-180');
+        }
+
+        function shareCard() {
+            const urlToShare = window.location.href;
+            const shareText = 'Dominique Verna - Digital Business Card';
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Dominique Verna',
+                    text: shareText,
+                    url: urlToShare
+                }).catch(function (err) {
+                    console.log('Share cancelled or failed:', err);
+                });
+            } else {
+                navigator.clipboard.writeText(urlToShare).then(function () {
+                    const shareTextEl = document.getElementById('share-text');
+                    const original = shareTextEl.textContent;
+                    shareTextEl.textContent = 'Copied!';
+                    setTimeout(function () {
+                        shareTextEl.textContent = original;
+                    }, 1500);
+                }).catch(function () {
+                    window.prompt('Copy this link:', urlToShare);
+                });
+            }
         }
     </script>
 </body>
