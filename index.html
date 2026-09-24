@@ -101,14 +101,16 @@
                 <div class="text-center px-6 pt-4 pb-2">
                     <h1 class="text-2xl font-bold text-gray-800">Dominique Verna</h1>
                     <p class="text-sm font-medium text-primary mt-1 mb-4">Digital Business Card</p>
-                    
+
                     <div class="grid grid-cols-2 gap-3 mt-2">
-                        <a href="tel:5164242140" class="flex flex-col items-center justify-center p-3 bg-primary text-white rounded-xl hover:bg-primaryHover transition-all transform hover:scale-105 shadow-sm">
+                        <!-- Call button with +1 -->
+                        <a href="tel:+15164242140" class="flex flex-col items-center justify-center p-3 bg-primary text-white rounded-xl hover:bg-primaryHover transition-all transform hover:scale-105 shadow-sm">
                             <i class="fa-solid fa-phone text-xl mb-1"></i>
                             <span class="text-xs font-semibold">Call</span>
                         </a>
 
-                        <a href="sms:5164242140" class="flex flex-col items-center justify-center p-3 bg-primary text-white rounded-xl hover:bg-primaryHover transition-all transform hover:scale-105 shadow-sm">
+                        <!-- Message button with +1 -->
+                        <a href="sms:+15164242140" class="flex flex-col items-center justify-center p-3 bg-primary text-white rounded-xl hover:bg-primaryHover transition-all transform hover:scale-105 shadow-sm">
                             <i class="fa-solid fa-comment-sms text-xl mb-1"></i>
                             <span class="text-xs font-semibold">Message</span>
                         </a>
@@ -118,6 +120,7 @@
                             <span class="text-xs font-semibold">Email</span>
                         </a>
 
+                        <!-- WhatsApp (already has the 1) -->
                         <a href="https://wa.me/15164242140" target="_blank" class="flex flex-col items-center justify-center p-3 bg-primary text-white rounded-xl hover:bg-primaryHover transition-all transform hover:scale-105 shadow-sm">
                             <i class="fa-brands fa-whatsapp text-xl mb-1"></i>
                             <span class="text-xs font-semibold">WhatsApp</span>
@@ -160,7 +163,7 @@
                         <div id="qrcode" class="qr-container bg-white p-2 rounded-xl"></div>
                     </div>
 
-                    <!-- Plain number shown under the QR so it's never misread -->
+                    <!-- Plain number shown under the QR -->
                     <p class="mt-4 text-lg font-bold tracking-wide text-primary">516-424-2140</p>
                 </div>
 
@@ -176,14 +179,14 @@
     </div>
 
     <script>
-        // The one and only phone number — no +1, no 0, no country code
-        const PHONE_NUMBER = '5164242140';
+        // Use the +1 international format so BOTH Android and iPhone dial correctly.
+        // The +1 tells the phone it's a US number, so iPhone stops adding the "0".
+        const PHONE_NUMBER = '+15164242140';
 
         window.addEventListener('DOMContentLoaded', function () {
             new QRCode(document.getElementById('qrcode'), {
-                // Plain digits as TEXT — no "tel:" prefix, so the scanner
-                // app can't inject a 0 or 1. It just shows 5164242140.
-                text: PHONE_NUMBER,
+                // tel: link WITH +1 so any phone dials it right
+                text: 'tel:' + PHONE_NUMBER,
                 width: 180,
                 height: 180,
                 colorDark: '#0d7a5d',
@@ -193,6 +196,7 @@
         });
 
         function downloadVCard() {
+            // vCard uses the +1 format too — phones save it perfectly
             const vcard = `BEGIN:VCARD
 VERSION:3.0
 FN:Dominique Verna
